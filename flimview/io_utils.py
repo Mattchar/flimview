@@ -35,11 +35,14 @@ def read_sdt_file(sdtfile, channel=0, xpix=256, ypix=256, tpix=256):
     if np.shape(sdt.data)[0] == 0:
         print("There is an error with this file: {}".format(sdtfile))
     sdt_meta = pd.DataFrame.from_records(sdt.measure_info[0])
-    sdt_meta = sdt_meta.append(
+
+    #the three 'sdt_meta.append(...)' below were changed to 'pd.concat(sdt_meta, ...)' since newer pandas library no longer supports .append
+    
+    sdt_meta = pd.concat(sdt_meta,
         pd.DataFrame.from_records(sdt.measure_info[1]), ignore_index=True
     )
-    sdt_meta.append(pd.DataFrame.from_records(sdt.measure_info[2]), ignore_index=True)
-    sdt_meta = sdt_meta.append(
+    pd.concat(sdt_meta, pd.DataFrame.from_records(sdt.measure_info[2]), ignore_index=True)
+    sdt_meta = pd.concat(sdt_meta,
         pd.DataFrame.from_records(sdt.measure_info[3]), ignore_index=True
     )
     header = {}
